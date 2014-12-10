@@ -1,0 +1,36 @@
+class MyClass {
+
+  Project project
+
+  def values = []
+
+  def value(value){
+    values << value
+  }
+  def printIt(){
+    values.each({
+        println "$project.name: $it"
+    })
+  }
+}
+class MyTask extends DefaultTask{
+
+  @Lazy
+  MyClass myClass = {[project:project]}()
+
+  def value(value){
+    myClass.value(value)
+  }
+
+  @TaskAction
+  def doIt(){
+    myClass.printIt()
+  }
+
+}
+
+task("myTask", type:MyTask){
+  value "foo"
+  value "bar"
+  value "baz"
+}
